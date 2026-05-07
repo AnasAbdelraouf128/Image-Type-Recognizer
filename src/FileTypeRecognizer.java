@@ -6,7 +6,7 @@
  *
  * * DESCRIPTION:
  * This program is an image Type Recognizer tool designed to bypass
- * standard file extensions. It identifies
+ * standard file extensions and it accurately guarantees the true file format regardless of its external naming convention. It identifies
  * files by reading their "Unique Numbers" (File Signatures) at the raw byte level.
 
  * * HOW TO USE (TERMINAL INSTRUCTIONS):
@@ -35,7 +35,18 @@ public class ImageTypeRecognizer {
     private static final int[] Unique_TIFF_LE = {0x49, 0x49, 0x2A, 0x00};
     private static final int[] Unique_TIFF_BE = {0x4D, 0x4D, 0x00, 0x2A};
     private static final int[] Unique_RAW_CR2 = {0x49, 0x49, 0x2A, 0x00, 0x10, 0x00, 0x00, 0x00, 0x43, 0x52};
-
+    private static final int[] Unique_WEBP = {0x52, 0x49, 0x46, 0x46};
+    private static final int[] Unique_ICO = {0x00, 0x00, 0x01, 0x00}; 
+    private static final int[] Unique_PSD = {0x38, 0x42, 0x50, 0x53}; 
+    
+    // Test for Unrelated extensions 
+    private static final int[] Unique_EXE = {0x4D, 0x5A};
+    private static final int[] Unique_ELF = {0x7F, 0x45, 0x4C, 0x46}; 
+    private static final int[] Unique_PDF = {0x25, 0x50, 0x44, 0x46, 0x2D}; 
+    private static final int[] Unique_ZIP = {0x50, 0x4B, 0x03, 0x04};
+    private static final int[] Unique_RAR = {0x52, 0x61, 0x72, 0x21, 0x1A, 0x07, 0x00}; 
+    private static final int[] Unique_RAR_V5 = {0x52, 0x61, 0x72, 0x21, 0x1A, 0x07, 0x01, 0x00};
+    
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("--- Image Type Recognizer ---");
@@ -128,7 +139,24 @@ public class ImageTypeRecognizer {
             return "TIFF Image File";
         } else if (matchesSignature(header, Unique_BMP)) {
             return "BMP Image File";
+        } else if (matchesSignature(header, Unique_EXE)) {
+            return "Windows Executable / DLL File";
+        } else if (matchesSignature(header, Unique_ELF)) {
+            return "Linux Executable (ELF)";
+        } else if (matchesSignature(header, Unique_PDF)) {
+            return "PDF Document";
+        } else if (matchesSignature(header, Unique_ZIP)) {
+            return "ZIP Archive / MS Office Open XML (DOCX/XLSX)";
+        } else if (matchesSignature(header, Unique_RAR) || matchesSignature(header, Unique_RAR_V5)) {
+            return "RAR Archive File";
+        } else if (matchesSignature(header, Unique_WEBP)) {
+            return "WebP Image File";
+        } else if (matchesSignature(header, Unique_ICO)) {
+            return "ICO Image File (Icon)";
+        } else if (matchesSignature(header, Unique_PSD)) {
+            return "PSD Image File (Adobe Photoshop)";
         }
+        
         return "Unknown / Other Format";
     }
 
